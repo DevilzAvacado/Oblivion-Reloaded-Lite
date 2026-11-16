@@ -271,7 +271,11 @@ void RenderManager::Initialize() {
 	ID3D9VkInteropDevice* pDxvkInterop = nullptr;
 	HRESULT hr = this->device->QueryInterface(IID_ID3D9VkInteropDevice, (void**)&pDxvkInterop);
 	if (SUCCEEDED(hr) && pDxvkInterop != nullptr) {
-		Logger::Log("DXVK Detected");
+		Logger::Log("DXVK detected: Vulkan interop interface available.");
+		pDxvkInterop->Release();
+	}
+	else {
+		Logger::Log("DXVK not detected: using the active D3D9 translation layer.");
 	}
 	MaxRenderTargets = caps.NumSimultaneousRTs;
 	D3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &currentDisplayMode);
@@ -284,6 +288,7 @@ void RenderManager::Initialize() {
 		Logger::Log("ERROR: Cannot initialize the render manager. Graphics device not supported.");
 	if (TheSettingManager->Config->Main.AnisotropicFilter >= 2) device->SetSamplerState(0, D3DSAMP_MAXANISOTROPY, TheSettingManager->Config->Main.AnisotropicFilter);
 	BackBuffer = CreateHDRRenderTarget();
+	if (D3D) D3D->Release();
 }
 
 void RenderManager::ResolveDepthBuffer() {
@@ -333,8 +338,13 @@ void RenderManager::ResolveDepthBuffer() {
 		device->SetPixelShader(pCurrPS);
 		device->SetStreamSource(0, pCurrVX, dCurrVO, dCurrVS);
 		
+		// Get* calls above AddRef their returned COM interfaces. Release every
+		// acquired reference after restoring the original D3D9 state.
 		if (pCurrTX) pCurrTX->Release();
 		if (pCurrVX) pCurrVX->Release();
+		if (pCurrVS) pCurrVS->Release();
+		if (pCurrPS) pCurrPS->Release();
+		if (pCurrDecl) pCurrDecl->Release();
 	}
 	else {
 		if (!TheTextureManager->DepthSurface) {
