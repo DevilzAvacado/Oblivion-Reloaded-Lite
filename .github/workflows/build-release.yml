@@ -1,0 +1,71 @@
+name: Build Oblivion Reloaded Lite
+
+on:
+  push:
+    branches:
+      - "release/**"
+    tags:
+      - "v*"
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  build-oblivion-x86:
+    runs-on: windows-2022
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: i686-pc-windows-msvc
+
+      - name: Build 32-bit Configurator library
+        shell: pwsh
+        run: |
+          cargo build --manifest-path Configurator/Cargo.toml --release --target i686-pc-windows-msvc
+          New-Item -ItemType Directory -Force Configurator/target/release | Out-Null
+          Copy-Item Configurator/target/i686-pc-windows-msvc/release/Configurator.dll.lib Configurator/target/release/Configurator.dll.lib -Force
+
+      - name: Build Oblivion Reloaded x86 plugin
+        shell: cmd
+        run: msbuild TESReloaded.sln /m /p:Configuration=Release /p:Platform=x86
+
+      - name: Stage installable plugin
+        shell: cmd
+        run: build.bat OblivionReloaded
+
+      - name: Package plugin
+        shell: pwsh
+        run: |
+          if (!(Test-Path "build/OblivionReloaded/obse/Plugins/OblivionReloaded.dll")) { throw "Expected xOBSE plugin DLL was not produced." }
+          Compress-Archive -Path "build/OblivionReloaded/*" -DestinationPath "Oblivion-Reloaded-Lite-v0.1.0.zip" -Force
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Oblivion-Reloaded-Lite-v0.1.0
+          path: Oblivion-Reloaded-Lite-v0.1.0.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish GitHub release for version tags
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Oblivion Reloaded Lite v0.1.0 (Unofficial)
+          body: |
+            Unofficial Steam Deck-oriented source fork of TESReloaded10.
+
+            This build retains exterior/interior shadows with reduced shadow-map budgets, disables optional high-cost effects by default, and includes D3D9/DXVK state-lifetime cleanup.
+
+            **Important:** Steam Deck/Proton in-game rendering, FPS, frame-time and power measurements must be completed by users before treating this as hardware-validated. See the repository testing plan.
+          files: Oblivion-Reloaded-Lite-v0.1.0.zip
+          draft: false
+          prerelease: true
