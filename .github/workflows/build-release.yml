@@ -3,6 +3,7 @@ name: Build Oblivion Reloaded Lite
 on:
   push:
     branches:
+      - master
       - "release/**"
     tags:
       - "v*"
@@ -59,10 +60,12 @@ jobs:
           retention-days: 30
 
       - name: Publish GitHub release for version tags
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v2
         with:
           name: Oblivion Reloaded Lite v0.1.0 (Unofficial)
+          tag_name: v0.1.0
+          target_commitish: master
           body: |
             Unofficial Steam Deck-oriented source fork of TESReloaded10.
 
