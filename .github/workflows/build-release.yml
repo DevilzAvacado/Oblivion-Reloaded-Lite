@@ -21,6 +21,9 @@ jobs:
       - name: Set up MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      - name: Restore NuGet packages
+        run: nuget restore TESReloaded.sln -NonInteractive
+
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@nightly
         with:
