@@ -8,7 +8,7 @@ SET "DEPLOY_LOCATION=%~2"
 if "%PROJECT%" NEQ "NewVegasReloaded" (
     if "%PROJECT%" NEQ "OblivionReloaded" (
         echo "Project %PROJECT% invalid. Use 'NewVegasReloaded' or 'OblivionReloaded'."
-        PAUSE
+if not defined CI PAUSE
         exit /b %ERRORLEVEL%
     )
 )
@@ -18,7 +18,7 @@ msbuild -target:%PROJECT% /property:Configuration=Release /property:Platform=x86
 
 if %ERRORLEVEL% NEQ 0 (
     echo Build has failed. Deploy aborted.
-    PAUSE
+if not defined CI PAUSE
     exit /b %ERRORLEVEL%
 )
 
@@ -52,9 +52,7 @@ if "%DEPLOY_LOCATION%" NEQ "" (
 ) else (
     echo "No deploy stage."
 )
-
-PAUSE
-
+if not defined CI PAUSE
 @REM handle Robocopy weird error codes
 if (%ERRORLEVEL% LSS 8) exit /b 0
 exit /b %ERRORLEVEL%

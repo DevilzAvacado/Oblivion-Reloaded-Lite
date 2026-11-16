@@ -1,146 +1,95 @@
-# TESReloaded
-TESReloaded is a custom made graphical extender for Bethesda games Oblivion, Fallout New Vegas and Skyrim, developped by [Alenet](https://github.com/Alenett) and maintained by [Llde](https://github.com/llde).
+# Oblivion Reloaded Lite
 
-It overrides the rendering pipeline to inject various effects that can be completely configured.
+**Oblivion Reloaded Lite** is an unofficial, Steam Deck-oriented fork/profile of [TESReloaded10](https://github.com/llde/TESReloaded10) for *The Elder Scrolls IV: Oblivion*. It aims to retain useful dynamic lighting and shadow features while reducing the cost of optional rendering effects.
 
-It relies on the script Extender of each game, such as [xOBSE](https://github.com/llde/xOBSE) or [xNVSE](https://github.com/xNVSE/NVSE). The script extender must be installed first. 
+This project is a **32-bit Windows xOBSE plugin** intended to run with the Windows version of Oblivion under SteamOS/Proton. It is not a native Linux renderer or a standalone mod manager.
 
-----
-## Features
-The mod supports the following effects (more to come):
-* **Ambient occlusion**
+> **Build status: 0.1.0 builds successfully.** The Windows x86 CI workflow has compiled the Configurator and plugin, staged the installable files, and produced the release ZIP. Steam Deck in-game compatibility, visual quality, frame pacing, power draw and battery life have **not yet been validated on physical hardware**. No performance improvement is guaranteed.
 
-Proximity shadowing.
+## Project goals
 
-* **BloodLens**
+- Preserve Oblivion Reloaded's exterior and interior shadowing systems.
+- Use a lower-cost default configuration suitable as a starting point for Steam Deck testing.
+- Keep optional post-processing and weather effects disabled unless a user deliberately enables them.
+- Preserve the Direct3D 9 / DXVK depth-buffer compatibility path.
+- Provide reproducible Windows x86 builds and a straightforward ZIP installation.
 
-Blood effects on the screen when hurt.
+## What's included
 
-* **Bloom**
+### Lite graphics profile
 
-Increases brightness of lights and light blurriness.
+The shipped configuration is deliberately conservative:
 
-* **Cinema**
+| Setting | Lite default |
+| --- | --- |
+| Exterior near shadow map | 2048 |
+| Interior shadow cube map | 1024 |
+| Shadowed interior light points | 1 |
+| Exterior and interior shadow systems | Enabled |
+| Post-process shadows | Disabled |
+| Ambient occlusion | Disabled |
+| God Rays, motion blur, POM | Disabled |
+| Custom precipitation, WetWorld, volumetric fog, replacement water | Disabled |
+| SmartControl frame-rate limiter | Disabled |
 
-Grain and film effects
+These are configuration choices, not measured performance results. You can adjust them in `OblivionReloaded.dll.config`; changing expensive options may increase GPU or CPU load.
 
-* **Coloring**
+### DXVK / Proton handling
 
-Color fine tuning.
+The inherited source includes a DXVK RESZ depth-buffer workaround in `TESReloaded/Core/RenderManager.cpp`. It preserves and restores the Direct3D 9 FVF and vertex declaration around depth-buffer resolution. This fork adds COM reference cleanup for acquired D3D9 state objects and the DXVK interop interface, along with diagnostic DXVK detection.
 
-* **Depth of Field**
+DXVK detection is diagnostic; it does not replace or switch the rendering backend.
 
-Dynamic depth of field based on distance.
+## Requirements
 
-* **Godrays**
+- The Windows version of *The Elder Scrolls IV: Oblivion*.
+- A working xOBSE installation in the same game/Proton prefix.
+- SteamOS/Proton for Steam Deck use, or a compatible Windows environment.
+- No other Oblivion Reloaded/E3 installation providing the same plugin DLL.
 
-Sun beam effects.
-
-* **LowHF**
-
-Screen and sound effects during low health/fatigue.
-
-* **MotionBlur**
-
-Motion blur during camera movements.
-
-* **POM Shaders**
-
-Parallax occlusion mapping to add bump effect to surfaces.
-
-* **Rain**
-
-Precipitation shader that replaces vanilla rain effect.
-
-* **Shadows (for exteriors and interiors)**
-
-Post process and forward shadows in exteriors during the day, and support to up to four light sources in interiors.
-
-* **Sharpening**
-
-Increases detail contrast.
-
-* **SMAA**
-
-Anti Aliasing.
-
-* **Snow/Snow accumulation**
-
-Snow precipitation, and white blanket effect on the surfaces.
-
-* **Watersurface/Underwater**
-
-Overhaul of the look of the water surfaces/lighting under water, caustics.
-
-* **Volumetric Fog**
-
-Exponential fog which adds up with depth.
-
-* **WaterLens** 
-
-Droplets appear on the screen went getting in and out of water
-
-* **WetWorld**
-
-Water puddles appear during rainy weather.
-
-
-----
-## Configuration
-
-To activate/Deactivate each effect, press O in game to bring up the menu. Navigate the menu with the arrow keys, and activate/deactivate effects and increase/decrease effect values with the numpad +/- keys.
-
-The configuration is stored in the `.dll.config` file and can be edited directly with a text editor.
-
-----
-## Building from source
-To build, with Visual Studio 2019 (Community Edition) with Desktop Development librairies, Windows SDK and DirectX9 SDK installed, run the `build.bat` file in command line, with the following command:
-
-```bat
-build.bat "ProjectName" "C:/DeployFolder/"
-```
-
- * `"Project Name"` can be either `OblivionReloaded` or `NewVegasReloaded`. 
- * The second argument is optional, and can be used to copy the built library to the game folder or (preferably) to a mod folder managed by [Mod Organizer 2](https://vivanewvegas.github.io/mo2.html). Otherwise, the built files can be found in the `/build/` folder at the root, to be copied manually.
-
-----
 ## Installation
 
-First Make sure that xOBSE/xNVSE is installed.
+1. Install and verify xOBSE first. Confirm the game launches with xOBSE before adding this plugin.
+2. Back up your current Oblivion Reloaded/E3 files and configuration.
+3. Download the `Oblivion-Reloaded-Lite-v0.1.0.zip` asset from the [Releases page](https://github.com/DevilzAvacado/Oblivion-Reloaded-Lite/releases).
+4. Extract the ZIP into the game's `Data` directory, preserving the archive's folder structure.
+5. Confirm these files exist:
+   - `Data/obse/Plugins/OblivionReloaded.dll`
+   - `Data/obse/Plugins/OblivionReloaded.dll.config`
+6. Launch Oblivion through Steam with xOBSE. Check the xOBSE/plugin logs if the plugin does not load.
 
-The files from the built folder must be then copied into the game Data folder.
+Do not install this alongside another Oblivion Reloaded/E3 copy that provides the same DLL. Remove the Lite files and restore your backup to roll back.
 
-To use a mod manager, create a zip with the contents of the `/build/` folder and drag & drop it into the mod list.
+## Steam Deck testing baseline
 
-It can be helpful to create a separate mod with only the `.config` file to try different settings.
+For a controlled comparison:
 
-----
-## Troubleshooting
+- Start at 1280×800, with the same in-game graphics settings for each test.
+- Keep the Proton version, TDP, frame-rate cap and refresh rate unchanged.
+- Compare vanilla and Lite from the same save, location, camera angle, weather and time of day.
+- Check for rendering errors, missing shadows, crashes and frame-time instability before changing the profile.
+- Record FPS/frame times and power draw rather than relying on subjective impressions.
 
-If the mod loaded properly, a message will appear at the bottom of the title screen with the version number. If not, try reinstalling directX or the directX SDK.
+See [Steam Deck profile/testing notes](docs/STEAM_DECK_PROFILE.md), [build instructions](docs/BUILDING.md) and [testing notes](docs/TESTING.md).
 
-### TESReloaded is not compatible with the following mods:
-* **ENB**
+## Building from source
 
-If you want extra control over the look of your game, use Reshade which is compatible.
+The project includes a Windows x86 GitHub Actions build workflow. For local build prerequisites and commands, see [docs/BUILDING.md](docs/BUILDING.md).
 
-* **Improved Lighting Shaders**
+The CI build for 0.1.0 completed successfully, including Configurator compilation, plugin compilation, staging and ZIP packaging. This verifies that the source can be built by that workflow; it does not establish that the plugin works correctly in-game on Steam Deck.
 
-Problem: Big areas covered in broken shaders results in bright blue surfaces. 
+## Project status and limitations
 
-Solution: Remove the TESReloaded Shaders with "SLS" in the name, as they are the source of the conflict. Only post process shadows will be working.
+- **Implemented:** conservative Lite configuration, retained DXVK RESZ path, COM cleanup, CI profile checks, Windows x86 build and ZIP packaging.
+- **Not yet verified:** installation and runtime behavior in an actual SteamOS/Proton game session; visual correctness across interiors/exteriors; frame pacing; GPU/CPU load; wattage and battery impact.
+- **Not claimed:** a specific FPS gain, lower wattage, longer battery life or universal compatibility.
 
-* **Enhanced Camera**
+Report reproducible issues with the game version, xOBSE version, Proton version, Deck model, relevant configuration and logs.
 
-Problem: Crash when loading a game.
+## Credits and license
 
-Solution: Disable "First Person Shadow" setting in Enhanced Camera .ini. 
+This is an unofficial derivative of [TESReloaded10](https://github.com/llde/TESReloaded10), originally created by Alenet and maintained by Llde. Retain [License.md](License.md), [COPYING.txt](COPYING.txt) and all third-party notices when redistributing.
 
-----
-## License
-Check [License](License.md) for the licensing terms.
+Upstream licensing terms require unofficial binaries to identify themselves as unofficial or use a distinct product name/description, prohibit selling binaries, and exclude support through official TESReloaded channels.
 
-----
-## Contributing
-
-If you want to contribute, create a fork of the project, and [join the discord](https://discord.com/invite/QgN6mR6eTK) to discuss possible developments.
+**UNOFFICIAL BUILD — not affiliated with or supported by the official TESReloaded project.**
