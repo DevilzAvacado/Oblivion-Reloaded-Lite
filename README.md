@@ -1,146 +1,42 @@
-# TESReloaded
-TESReloaded is a custom made graphical extender for Bethesda games Oblivion, Fallout New Vegas and Skyrim, developped by [Alenet](https://github.com/Alenett) and maintained by [Llde](https://github.com/llde).
+# Oblivion Reloaded Lite
 
-It overrides the rendering pipeline to inject various effects that can be completely configured.
+Unofficial Steam Deck-first performance profile and source fork of [TESReloaded10](https://github.com/llde/TESReloaded10) for The Elder Scrolls IV: Oblivion.
 
-It relies on the script Extender of each game, such as [xOBSE](https://github.com/llde/xOBSE) or [xNVSE](https://github.com/xNVSE/NVSE). The script extender must be installed first. 
+> **Status: source release candidate, not a verified binary release.** The profile and source changes are committed, but a Windows x86 build and in-game SteamOS/Proton testing are still required. No FPS, wattage or battery-life claims are made without Deck measurements.
 
-----
-## Features
-The mod supports the following effects (more to come):
-* **Ambient occlusion**
+## Design
 
-Proximity shadowing.
+- Retains the original xOBSE plugin and Direct3D 9 renderer.
+- Keeps exterior near shadows and interior local shadows enabled.
+- Reduces exterior near shadow maps from 4096 to 2048.
+- Reduces interior shadow cube maps from 2048 to 1024 and shadowed interior light points from two to one.
+- Keeps post-process shadows disabled.
+- Disables optional God Rays, motion blur, POM, custom precipitation, WetWorld, volumetric fog and replacement water effects by default.
+- Ambient occlusion was already disabled upstream and remains disabled.
+- Disables the plugin's SmartControl FPS cap; use Steam's frame limiter instead.
 
-* **BloodLens**
+## DXVK / Proton
 
-Blood effects on the screen when hurt.
+The inherited source already contains the E3/upstream DXVK RESZ workaround in `TESReloaded/Core/RenderManager.cpp`: it saves and restores both the D3D9 FVF and vertex declaration around depth-buffer resolution. This fork adds COM reference cleanup for the acquired D3D9 state objects and DXVK interop interface, and logs DXVK detection. Detection is diagnostic only; it does not switch rendering APIs.
 
-* **Bloom**
+This is a 32-bit Windows xOBSE DLL loaded by Oblivion through Proton, not a native Linux plugin.
 
-Increases brightness of lights and light blurriness.
-
-* **Cinema**
-
-Grain and film effects
-
-* **Coloring**
-
-Color fine tuning.
-
-* **Depth of Field**
-
-Dynamic depth of field based on distance.
-
-* **Godrays**
-
-Sun beam effects.
-
-* **LowHF**
-
-Screen and sound effects during low health/fatigue.
-
-* **MotionBlur**
-
-Motion blur during camera movements.
-
-* **POM Shaders**
-
-Parallax occlusion mapping to add bump effect to surfaces.
-
-* **Rain**
-
-Precipitation shader that replaces vanilla rain effect.
-
-* **Shadows (for exteriors and interiors)**
-
-Post process and forward shadows in exteriors during the day, and support to up to four light sources in interiors.
-
-* **Sharpening**
-
-Increases detail contrast.
-
-* **SMAA**
-
-Anti Aliasing.
-
-* **Snow/Snow accumulation**
-
-Snow precipitation, and white blanket effect on the surfaces.
-
-* **Watersurface/Underwater**
-
-Overhaul of the look of the water surfaces/lighting under water, caustics.
-
-* **Volumetric Fog**
-
-Exponential fog which adds up with depth.
-
-* **WaterLens** 
-
-Droplets appear on the screen went getting in and out of water
-
-* **WetWorld**
-
-Water puddles appear during rainy weather.
-
-
-----
-## Configuration
-
-To activate/Deactivate each effect, press O in game to bring up the menu. Navigate the menu with the arrow keys, and activate/deactivate effects and increase/decrease effect values with the numpad +/- keys.
-
-The configuration is stored in the `.dll.config` file and can be edited directly with a text editor.
-
-----
-## Building from source
-To build, with Visual Studio 2019 (Community Edition) with Desktop Development librairies, Windows SDK and DirectX9 SDK installed, run the `build.bat` file in command line, with the following command:
-
-```bat
-build.bat "ProjectName" "C:/DeployFolder/"
-```
-
- * `"Project Name"` can be either `OblivionReloaded` or `NewVegasReloaded`. 
- * The second argument is optional, and can be used to copy the built library to the game folder or (preferably) to a mod folder managed by [Mod Organizer 2](https://vivanewvegas.github.io/mo2.html). Otherwise, the built files can be found in the `/build/` folder at the root, to be copied manually.
-
-----
 ## Installation
 
-First Make sure that xOBSE/xNVSE is installed.
+1. Install and verify xOBSE in the same Proton prefix as Oblivion.
+2. Back up existing Oblivion Reloaded/E3 files and configuration.
+3. Extract the release ZIP into the game's `Data` directory, preserving folders.
+4. Verify `Data/obse/Plugins/OblivionReloaded.dll` and its adjacent `OblivionReloaded.dll.config`.
+5. Launch through Steam with xOBSE and inspect its logs/title-screen load message.
 
-The files from the built folder must be then copied into the game Data folder.
+Do not install alongside another Oblivion Reloaded/E3 copy that supplies the same DLL.
 
-To use a mod manager, create a zip with the contents of the `/build/` folder and drag & drop it into the mod list.
+## Steam Deck baseline
 
-It can be helpful to create a separate mod with only the `.config` file to try different settings.
+Start at 1280x800 with vanilla game graphics settings, normal TDP and the Lite config. Use Steam's frame limiter. Compare vanilla and Lite using the same save, location, camera, weather, time of day, Proton version and TDP.
 
-----
-## Troubleshooting
+See [docs/STEAM_DECK_PROFILE.md](docs/STEAM_DECK_PROFILE.md), [docs/BUILDING.md](docs/BUILDING.md) and [docs/TESTING.md](docs/TESTING.md).
 
-If the mod loaded properly, a message will appear at the bottom of the title screen with the version number. If not, try reinstalling directX or the directX SDK.
+## Credits and license
 
-### TESReloaded is not compatible with the following mods:
-* **ENB**
-
-If you want extra control over the look of your game, use Reshade which is compatible.
-
-* **Improved Lighting Shaders**
-
-Problem: Big areas covered in broken shaders results in bright blue surfaces. 
-
-Solution: Remove the TESReloaded Shaders with "SLS" in the name, as they are the source of the conflict. Only post process shadows will be working.
-
-* **Enhanced Camera**
-
-Problem: Crash when loading a game.
-
-Solution: Disable "First Person Shadow" setting in Enhanced Camera .ini. 
-
-----
-## License
-Check [License](License.md) for the licensing terms.
-
-----
-## Contributing
-
-If you want to contribute, create a fork of the project, and [join the discord](https://discord.com/invite/QgN6mR6eTK) to discuss possible developments.
+Unofficial derivative of TESReloaded10, originally created by Alenet and maintained by Llde. Preserve [License.md](License.md), [COPYING.txt](COPYING.txt) and third-party notices. Upstream terms require unofficial binaries to identify as unofficial, disclaim official-channel support, and prohibit selling binaries. **UNOFFICIAL BUILD — do not seek support through official TESReloaded channels.**
