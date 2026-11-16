@@ -1,0 +1,24 @@
+name: Lite profile checks
+
+on:
+  push:
+    branches:
+      - "release/**"
+      - master
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  profile-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate Steam Deck profile and DXVK invariants
+        run: python tests/verify_profile.py
