@@ -273,7 +273,7 @@ struct EffectsStruct {
 impl Default for EffectsStruct{
     fn default() -> Self{
         EffectsStruct{
-            AmbientOcclusion : false,
+            AmbientOcclusion : true,
             BloodLens : true,
             Bloom : true,
             Cinema : true,

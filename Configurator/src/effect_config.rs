@@ -53,8 +53,8 @@ pub struct AmbientOcclusion{
 
 impl Default for AmbientOcclusion{
 	fn default() -> Self {
-		let exterior = 	AmbientOcclusionInner{Enabled : true, Samples : 20, StrengthMultiplier : 1.0, ClampStrength : -0.5, AngleBias : 0.1, Range : 150.0, LumThreshold : 0.2, BlurDropThreshold : 3.0, BlurRadiusMultiplier : 1.0};
-		let interior = AmbientOcclusionInner{Enabled : true, Samples : 20, StrengthMultiplier : 1.0, ClampStrength : -0.5, AngleBias : 0.1, Range : 1000.0, LumThreshold : 0.2, BlurDropThreshold : 3.0, BlurRadiusMultiplier : 1.0};
+		let exterior = AmbientOcclusionInner{Enabled : true, Samples : 4, StrengthMultiplier : 0.75, ClampStrength : 0.55, AngleBias : 15.0, Range : 80.0, LumThreshold : 0.2, BlurDropThreshold : 10.0, BlurRadiusMultiplier : 0.75};
+		let interior = AmbientOcclusionInner{Enabled : true, Samples : 4, StrengthMultiplier : 0.85, ClampStrength : 0.55, AngleBias : 15.0, Range : 120.0, LumThreshold : 0.1, BlurDropThreshold : 10.0, BlurRadiusMultiplier : 0.75};
 	    Self { Exterior: exterior, Interior:  interior }
 	}
 }

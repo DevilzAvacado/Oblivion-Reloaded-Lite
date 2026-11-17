@@ -10,6 +10,7 @@
 | HDR pipeline | On | Retains existing tone-mapping path |
 | Frustum culling | On | Avoids processing off-screen geometry |
 | Anisotropic filtering | 8x | Texture clarity |
+| Lightweight ambient occlusion | On | Subtle depth-aware contact shading with reduced shader sampling |
 
 ## Reduced
 
@@ -23,7 +24,6 @@ Exterior far-shadow settings and caster selections remain inherited. If profilin
 
 ## Disabled by default
 
-- Ambient occlusion (already disabled upstream).
 - God Rays / light shafts.
 - Motion blur.
 - Parallax occlusion mapping.
@@ -33,7 +33,7 @@ Exterior far-shadow settings and caster selections remain inherited. If profilin
 - Replacement water shader.
 - Plugin SmartControl FPS cap.
 
-These are defaults, not hard-coded restrictions. Re-enable them through the in-game menu/configuration if desired.
+These remaining optional effects are defaults, not hard-coded restrictions. They can be enabled through the configuration if desired.
 
 ## Frame pacing
 

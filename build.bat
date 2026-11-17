@@ -41,6 +41,14 @@ xcopy "Extra\%PROJECT%.dll.config" "build\%PROJECT%\%FOLDER%\Plugins\" /y /d
 
 @REM Copy Shaders
 robocopy /mir .\Extra\Shaders\%PROJECT%\ .\build\%PROJECT%\Shaders\%PROJECT%\
+@REM Keep the AO HLSL newer than its cached effect binary so CompileEffects=2 recompiles it on first launch.
+if "%PROJECT%" == "OblivionReloaded" (
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "$source = Get-Item 'build/OblivionReloaded/Shaders/OblivionReloaded/Effects/AmbientOcclusion.fx.hlsl'; $binary = Get-Item 'build/OblivionReloaded/Shaders/OblivionReloaded/Effects/AmbientOcclusion.fx'; if ($source.LastWriteTime -le $binary.LastWriteTime) { $source.LastWriteTime = $binary.LastWriteTime.AddSeconds(2) }"
+    if errorlevel 1 (
+        echo Failed to prepare the updated ambient occlusion shader for recompilation.
+        exit /b 1
+    )
+)
 
 @REM Copy Textures
 robocopy /mir .\Extra\Textures\ .\build\%PROJECT%\Textures\

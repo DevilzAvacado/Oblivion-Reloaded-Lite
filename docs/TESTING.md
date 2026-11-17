@@ -5,6 +5,7 @@
 - Parse `Extra/OblivionReloaded.dll.config` as XML.
 - Confirm exterior near and interior shadows remain enabled.
 - Confirm optional Lite-disabled effects are off.
+- Confirm fresh configurations enable AO and use four AO samples with an eight-tap blur kernel.
 - Confirm the RESZ depth-resolve saves and restores FVF and vertex declaration.
 - Confirm COM references acquired in the RESZ path are released.
 - Compile the x86 DLL in Release configuration.
@@ -17,15 +18,16 @@
 4. Verify the plugin load message and xOBSE logs.
 5. Inspect exterior sun shadows on actors, trees and static geometry.
 6. Inspect interior local shadows with a torch.
-7. Switch first-person/third-person; check for ghost hands, broken geometry and state corruption.
-8. Change cells, load saves, open menus and use local maps.
-9. Enable DXVK HUD and verify the game is using the expected D3D9/Vulkan path.
+7. Verify AO contact shading in both interior and exterior scenes; check for halos, depth leaks, excessive darkening and flicker.
+8. Switch first-person/third-person; check for ghost hands, broken geometry and state corruption.
+9. Change cells, load saves, open menus and use local maps.
+10. Enable DXVK HUD and verify the game is using the expected D3D9/Vulkan path.
 
 ## Performance A/B protocol
 
 Use identical hardware, game build, Proton version, save, location, camera, weather, time of day, resolution, graphics settings, refresh rate and TDP limit. Run each configuration at least three times.
 
-Record average FPS, 1% lows, frame-time data, CPU/GPU utilization, total system power and battery discharge if available. Compare medians and variability, not one best run.
+Record average FPS, 1% lows, frame-time data, CPU/GPU utilization, total system power and battery discharge if available. Include AO-on and AO-off runs from the same scene to isolate its cost. Compare medians and variability, not one best run.
 
 ## Stable-release gate
 

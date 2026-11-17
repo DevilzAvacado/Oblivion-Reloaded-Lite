@@ -27,12 +27,23 @@ The shipped configuration is deliberately conservative:
 | Shadowed interior light points | 1 |
 | Exterior and interior shadow systems | Enabled |
 | Post-process shadows | Disabled |
-| Ambient occlusion | Disabled |
+| Ambient occlusion | Enabled (4 samples, 8-tap separable blur) |
 | God Rays, motion blur, POM | Disabled |
 | Custom precipitation, WetWorld, volumetric fog, replacement water | Disabled |
 | SmartControl frame-rate limiter | Disabled |
 
-These are configuration choices, not measured performance results. You can adjust them in `OblivionReloaded.dll.config`; changing expensive options may increase GPU or CPU load.
+These are configuration choices, not measured performance results. Main options are stored in `Data/OBSE/Plugins/OblivionReloaded.ini`; AO quality values are stored in `Data/Shaders/OblivionReloaded/Effects/Effects.ini`.
+
+### Lightweight ambient occlusion
+
+AO is enabled by default for fresh configurations with a deliberately reduced shader workload:
+
+- Four depth samples in the AO pass.
+- Eight depth-aware taps per blur direction (horizontal and vertical), down from twelve.
+- Shorter sampling and blur radii with restrained interior/exterior strength.
+- The existing depth-aware blur and fog fade are retained.
+
+The updated HLSL source is staged newer than its cached shader binary so the default `CompileEffects = 2` setting recompiles the effect on first launch. This can cause a one-time shader compilation delay. Existing user INI values are preserved; users with an existing configuration that explicitly disables AO must enable `Effects.AmbientOcclusion` in `Data/OBSE/Plugins/OblivionReloaded.ini`. No Steam Deck performance measurements are claimed until tested on hardware.
 
 ### DXVK / Proton handling
 
@@ -51,7 +62,7 @@ DXVK detection is diagnostic; it does not replace or switch the rendering backen
 
 1. Install and verify xOBSE first. Confirm the game launches with xOBSE before adding this plugin.
 2. Back up your current Oblivion Reloaded/E3 files and configuration.
-3. Download the `Oblivion-Reloaded-Lite-v0.1.0.zip` asset from the [Releases page](https://github.com/DevilzAvacado/Oblivion-Reloaded-Lite/releases).
+3. Download the `Oblivion-Reloaded-Lite-v0.2.0.zip` asset from the [Releases page](https://github.com/DevilzAvacado/Oblivion-Reloaded-Lite/releases).
 4. Extract the ZIP into the game's `Data` directory, preserving the archive's folder structure.
 5. Confirm these files exist:
    - `Data/obse/Plugins/OblivionReloaded.dll`
