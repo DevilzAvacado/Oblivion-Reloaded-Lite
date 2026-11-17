@@ -69,7 +69,7 @@ jobs:
           body: |
             Unofficial Steam Deck-oriented source fork of TESReloaded10.
 
-            This build retains exterior/interior shadows with reduced shadow-map budgets, disables optional high-cost effects by default, and includes D3D9/DXVK state-lifetime cleanup.
+            This build retains exterior/interior shadows with reduced shadow-map budgets, adds lightweight depth-aware ambient occlusion (four AO samples and an eight-tap blur per direction), keeps other optional high-cost effects disabled by default, and includes D3D9/DXVK state-lifetime cleanup.
 
             **Important:** Steam Deck/Proton in-game rendering, FPS, frame-time and power measurements must be completed by users before treating this as hardware-validated. See the repository testing plan.
           files: Oblivion-Reloaded-Lite-v0.2.0.zip
