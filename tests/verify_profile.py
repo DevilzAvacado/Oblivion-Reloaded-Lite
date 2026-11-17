@@ -37,4 +37,19 @@ for token in ("GetFVF", "GetVertexDeclaration", "SetFVF(dCurrFVF)",
 
 assert "pDxvkInterop->Release()" in source
 assert "D3D->Release()" in source
+# Lightweight AO defaults and shader budget.
+main_defaults = Path("Configurator/src/main_config.rs").read_text(encoding="utf-8")
+effect_defaults = Path("Configurator/src/effect_config.rs").read_text(encoding="utf-8")
+effect_template = Path("Configurator/effect.ini").read_text(encoding="utf-8")
+ao_shader = Path("Extra/Shaders/OblivionReloaded/Effects/AmbientOcclusion.fx.hlsl").read_text(encoding="utf-8")
+assert "AmbientOcclusion : true," in main_defaults
+assert "Samples : 4" in effect_defaults
+assert "StrengthMultiplier : 0.75" in effect_defaults
+assert "StrengthMultiplier : 0.85" in effect_defaults
+assert "Samples = 4" in effect_template
+assert "static const int samples = 4;" in ao_shader
+assert "static const int cKernelSize = 8;" in ao_shader
+assert "float2(-4.0f * TESR_ReciprocalResolution.x" in ao_shader
+assert "float2( 4.0f * TESR_ReciprocalResolution.x" in ao_shader
+assert "CompileEffects : 2" in main_defaults
 print("Oblivion Reloaded Lite profile checks passed.")
