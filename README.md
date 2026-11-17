@@ -4,7 +4,7 @@
 
 This project is a **32-bit Windows xOBSE plugin** intended to run with the Windows version of Oblivion under SteamOS/Proton. It is not a native Linux renderer or a standalone mod manager.
 
-> **Build status: 0.1.0 builds successfully.** The Windows x86 CI workflow has compiled the Configurator and plugin, staged the installable files, and produced the release ZIP. Steam Deck in-game compatibility, visual quality, frame pacing, power draw and battery life have **not yet been validated on physical hardware**. No performance improvement is guaranteed.
+> **Build status: 0.2.0 builds successfully.** The Windows x86 CI workflow has compiled the Configurator and plugin, staged the installable files, and produced the release ZIP. Steam Deck in-game compatibility, visual quality, frame pacing, power draw and battery life have **not yet been validated on physical hardware**. No performance improvement is guaranteed.
 
 ## Project goals
 
@@ -63,11 +63,13 @@ DXVK detection is diagnostic; it does not replace or switch the rendering backen
 1. Install and verify xOBSE first. Confirm the game launches with xOBSE before adding this plugin.
 2. Back up your current Oblivion Reloaded/E3 files and configuration.
 3. Download the `Oblivion-Reloaded-Lite-v0.2.0.zip` asset from the [Releases page](https://github.com/DevilzAvacado/Oblivion-Reloaded-Lite/releases).
-4. Extract the ZIP into the game's `Data` directory, preserving the archive's folder structure.
+4. Extract the ZIP into the **Oblivion game root** (the folder containing `Oblivion.exe`), preserving the archive's folder structure. Do not extract it into `Data`.
 5. Confirm these files exist:
-   - `Data/obse/Plugins/OblivionReloaded.dll`
-   - `Data/obse/Plugins/OblivionReloaded.dll.config`
-6. Launch Oblivion through Steam with xOBSE. Check the xOBSE/plugin logs if the plugin does not load.
+   - `Data/OBSE/Plugins/OblivionReloaded.dll`
+   - `Data/OBSE/Plugins/OblivionReloaded.dll.config`
+6. Launch Oblivion through Steam with xOBSE. Check the xOBSE and plugin logs if the plugin does not load.
+
+**Steam Deck users:** follow the separate [Steam Deck installation guide](docs/STEAM_DECK_INSTALLATION.md), including the Proton/xOBSE launcher setup and first-launch checks.
 
 Do not install this alongside another Oblivion Reloaded/E3 copy that provides the same DLL. Remove the Lite files and restore your backup to roll back.
 
@@ -87,7 +89,7 @@ See [Steam Deck profile/testing notes](docs/STEAM_DECK_PROFILE.md), [build instr
 
 The project includes a Windows x86 GitHub Actions build workflow. For local build prerequisites and commands, see [docs/BUILDING.md](docs/BUILDING.md).
 
-The CI build for 0.1.0 completed successfully, including Configurator compilation, plugin compilation, staging and ZIP packaging. This verifies that the source can be built by that workflow; it does not establish that the plugin works correctly in-game on Steam Deck.
+The CI build for 0.2.0 completed successfully, including Configurator compilation, plugin compilation, staging and ZIP packaging. This verifies that the source can be built by that workflow; it does not establish that the plugin works correctly in-game on Steam Deck.
 
 ## Project status and limitations
 
