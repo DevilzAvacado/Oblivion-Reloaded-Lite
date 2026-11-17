@@ -12,7 +12,7 @@ sampler2D TESR_RenderedBuffer : register(s0) = sampler_state { ADDRESSU = CLAMP;
 sampler2D TESR_DepthBuffer : register(s1) = sampler_state { ADDRESSU = CLAMP; ADDRESSV = CLAMP; MAGFILTER = LINEAR; MINFILTER = LINEAR; MIPFILTER = LINEAR; };
 sampler2D TESR_SourceBuffer : register(s2) = sampler_state { ADDRESSU = CLAMP; ADDRESSV = CLAMP; MAGFILTER = LINEAR; MINFILTER = LINEAR; MIPFILTER = LINEAR; };
 
-static const int samples = 5;
+static const int samples = 4;
 static const int rings = 2;
 static const float nearZ = TESR_ProjectionTransform._43 / TESR_ProjectionTransform._33;
 static const float farZ = (TESR_ProjectionTransform._33 * nearZ) / (TESR_ProjectionTransform._33 - 1.0f);
@@ -26,28 +26,22 @@ static const float sinAngleBias = sin(angleBiasRadians);
 static const float2 OffsetMaskH = float2(1.0f, 0.0f);
 static const float2 OffsetMaskV = float2(0.0f, 1.0f);
 static const float PI = 3.14159265;
-static const int cKernelSize = 12;
+static const int cKernelSize = 8;
 
-static const float BlurWeights[cKernelSize] = 
+static const float BlurWeights[cKernelSize] =
 {
-	0.057424882f,
-	0.058107773f,
-	0.061460144f,
-	0.071020611f,
-	0.088092873f,
-	0.106530916f,
-	0.106530916f,
-	0.088092873f,
-	0.071020611f,
-	0.061460144f,
-	0.058107773f,
-	0.057424882f
+	0.0832f,
+	0.0961f,
+	0.1192f,
+	0.1441f,
+	0.1441f,
+	0.1192f,
+	0.0961f,
+	0.0832f
 };
  
-static const float2 BlurOffsets[cKernelSize] = 
+static const float2 BlurOffsets[cKernelSize] =
 {
-	float2(-6.0f * TESR_ReciprocalResolution.x, -6.0f * TESR_ReciprocalResolution.y),
-	float2(-5.0f * TESR_ReciprocalResolution.x, -5.0f * TESR_ReciprocalResolution.y),
 	float2(-4.0f * TESR_ReciprocalResolution.x, -4.0f * TESR_ReciprocalResolution.y),
 	float2(-3.0f * TESR_ReciprocalResolution.x, -3.0f * TESR_ReciprocalResolution.y),
 	float2(-2.0f * TESR_ReciprocalResolution.x, -2.0f * TESR_ReciprocalResolution.y),
@@ -55,9 +49,7 @@ static const float2 BlurOffsets[cKernelSize] =
 	float2( 1.0f * TESR_ReciprocalResolution.x,  1.0f * TESR_ReciprocalResolution.y),
 	float2( 2.0f * TESR_ReciprocalResolution.x,  2.0f * TESR_ReciprocalResolution.y),
 	float2( 3.0f * TESR_ReciprocalResolution.x,  3.0f * TESR_ReciprocalResolution.y),
-	float2( 4.0f * TESR_ReciprocalResolution.x,  4.0f * TESR_ReciprocalResolution.y),
-	float2( 5.0f * TESR_ReciprocalResolution.x,  5.0f * TESR_ReciprocalResolution.y),
-	float2( 6.0f * TESR_ReciprocalResolution.x,  6.0f * TESR_ReciprocalResolution.y)
+	float2( 4.0f * TESR_ReciprocalResolution.x,  4.0f * TESR_ReciprocalResolution.y)
 };
  
 struct VSOUT
