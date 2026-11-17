@@ -32,7 +32,7 @@ The shipped configuration is deliberately conservative:
 | Custom precipitation, WetWorld, volumetric fog, replacement water | Disabled |
 | SmartControl frame-rate limiter | Disabled |
 
-These are configuration choices, not measured performance results. You can adjust them in `OblivionReloaded.dll.config`; changing expensive options may increase GPU or CPU load.
+These are configuration choices, not measured performance results. Main options are stored in `Data/OBSE/Plugins/OblivionReloaded.ini`; AO quality values are stored in `Data/Shaders/OblivionReloaded/Effects/Effects.ini`.
 
 ### Lightweight ambient occlusion
 
