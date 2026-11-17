@@ -33,8 +33,8 @@ static const float BlurWeights[cKernelSize] =
 	0.0832f,
 	0.0961f,
 	0.1192f,
-	0.1441f,
-	0.1441f,
+	0.1441372f,
+	0.1441372f,
 	0.1192f,
 	0.0961f,
 	0.0832f
