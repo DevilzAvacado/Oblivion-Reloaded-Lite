@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — Adaptive grass-distance development
+## 0.3.0-beta.1 — Adaptive grass-distance preview
 
 - Added an opt-in adaptive grass-distance controller to the existing grass-generation hook.
 - Added configurable target frame rate and minimum grass-distance scale, with conservative input clamping.
@@ -9,7 +9,7 @@
 - Added static checks and a controlled A/B test protocol.
 - Existing AO, DXVK RESZ handling, shadow defaults and Steam Deck profile remain unchanged.
 
-**Validation limitation:** A Windows x86 CI build and static checks can validate compilation and configuration consistency, but they cannot validate grass transitions, actual frame-time gains, stability or power consumption on Steam Deck hardware.
+**Pre-release status:** This beta adds the controller but leaves it disabled by default. The passing Windows x86 build and static checks do not validate grass transitions, actual frame-time gains, gameplay stability or power consumption on physical Steam Deck hardware.
 
 
 ## 0.2.0 — Lightweight ambient occlusion
