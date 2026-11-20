@@ -10,6 +10,20 @@
 - Confirm COM references acquired in the RESZ path are released.
 - Compile the x86 DLL in Release configuration.
 
+## Adaptive grass-distance test
+
+Test the adaptive controller separately from other graphics changes:
+
+1. Use the same save, exterior location, camera direction, weather, time of day, resolution, frame cap and TDP.
+2. Record a baseline with `AdaptiveGrassDistance = false`.
+3. Enable it with a 60 FPS target and a 0.65 minimum distance scale.
+4. Observe the same scene for at least two minutes, including a period of sustained load and a return to a less demanding area.
+5. Record average FPS, 1% lows, frame times, CPU/GPU utilization and total system power.
+6. Check for grass popping, visible distance changes, oscillation, missing grass near cell edges and unintended changes in interiors.
+7. Repeat each condition at least three times and compare medians.
+
+The controller must not be described as improving performance unless the measurements show a repeatable benefit. A successful compile and static test do not validate the in-game behavior.
+
 ## xOBSE / Proton smoke test
 
 1. Back up the game directory and plugin configuration.
