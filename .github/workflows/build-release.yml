@@ -23,6 +23,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2
 
       - name: Determine package version
+        id: version
         shell: pwsh
         run: |
           if ("${{ github.ref_type }}" -eq "tag") {
@@ -33,6 +34,7 @@ jobs:
             $version = "dev-${{ github.sha }}".Substring(0, 11)
           }
           "PACKAGE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "package_version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
       - name: Restore NuGet packages
         run: nuget restore TESReloaded.sln -NonInteractive
@@ -66,8 +68,8 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Oblivion-Reloaded-Lite-${{ env.PACKAGE_VERSION }}
-          path: Oblivion-Reloaded-Lite-${{ env.PACKAGE_VERSION }}.zip
+          name: Oblivion-Reloaded-Lite-${{ steps.version.outputs.package_version }}
+          path: Oblivion-Reloaded-Lite-${{ steps.version.outputs.package_version }}.zip
           if-no-files-found: error
           retention-days: 30
 
@@ -81,6 +83,6 @@ jobs:
             Unofficial Steam Deck-oriented source fork of TESReloaded10.
 
             See the repository README, changelog, installation guide and testing notes for the exact features and validation status of this tagged build.
-          files: Oblivion-Reloaded-Lite-${{ env.PACKAGE_VERSION }}.zip
+          files: Oblivion-Reloaded-Lite-${{ steps.version.outputs.package_version }}.zip
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}
