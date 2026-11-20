@@ -29,7 +29,7 @@ assert value("./_Shaders/ShadowsInteriors/Main/ShadowCubeMapSize") == "1024"
 assert value("./_Shaders/ShadowsInteriors/Main/LightPoints") == "1"
 
 # DXVK RESZ fix: preserve and restore both D3D9 vertex format mechanisms.
-resolve = source.split("void RenderManager::ResolveDepthBuffer()", 1)[1].split("\\nvoid ", 1)[0]
+resolve = source.split("void RenderManager::ResolveDepthBuffer()", 1)[1].split("\nvoid ", 1)[0]
 for token in ("GetFVF", "GetVertexDeclaration", "SetFVF(dCurrFVF)",
               "SetVertexDeclaration(pCurrDecl)", "pCurrDecl->Release()",
               "pCurrVS->Release()", "pCurrPS->Release()"):
