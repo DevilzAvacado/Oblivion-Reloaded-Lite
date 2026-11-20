@@ -83,4 +83,4 @@ jobs:
             See the repository README, changelog, installation guide and testing notes for the exact features and validation status of this tagged build.
           files: Oblivion-Reloaded-Lite-${{ env.PACKAGE_VERSION }}.zip
           draft: false
-          prerelease: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
