@@ -58,6 +58,12 @@ struct MainStruct {
   /// Enable directional light  as sun source instead of the normal sun position (for testing purposes only)
   bool TestDirectionLight;
   bool InstanceFarGeometry;
+  /// Adapt grass draw distance gradually when sustained frame times exceed the configured target.
+  bool AdaptiveGrassDistance;
+  /// Target frame rate used by adaptive grass distance (30-90 FPS).
+  uint8_t GrassTargetFrameRate;
+  /// Minimum grass distance multiplier when adaptive mode reduces quality (0.40-0.90).
+  float GrassMinimumDistanceScale;
 };
 
 struct WaterEngine {

@@ -35,6 +35,23 @@ Exterior far-shadow settings and caster selections remain inherited. If profilin
 
 These remaining optional effects are defaults, not hard-coded restrictions. They can be enabled through the configuration if desired.
 
+## Adaptive grass distance (opt-in)
+
+The plugin includes an adaptive grass-distance controller for testing on constrained hardware. It does not change grass density or replace the grass shader. Instead, it gradually scales the start-fade and end distances passed to the existing grass-generation routine.
+
+The controller is disabled by default because its visual behavior and performance impact have not yet been measured on physical Steam Deck hardware. To test it, edit `Data/OBSE/Plugins/OblivionReloaded.ini`:
+
+```toml
+[Main]
+AdaptiveGrassDistance = true
+GrassTargetFrameRate = 60
+GrassMinimumDistanceScale = 0.65
+```
+
+The controller uses a smoothed frame-time estimate and hysteresis. It reduces distance after sustained frame times exceed the target by 10%, then restores distance more slowly after frame times recover. Valid target rates are 30–90 FPS; the minimum distance multiplier is constrained to 0.40–0.90. Invalid values fall back to conservative defaults.
+
+This is an opt-in quality adjustment, not a claim of guaranteed FPS improvement. Check for visible grass-distance transitions, repeated oscillation, missing grass at cell boundaries, and changes between interiors and exteriors. Keep the feature disabled if it causes distracting changes.
+
 ## Frame pacing
 
 Use SteamOS's per-game frame limiter rather than running a second limiter in the plugin. Pick a target only after establishing a stable baseline.

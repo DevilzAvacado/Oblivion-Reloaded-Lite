@@ -52,4 +52,28 @@ assert "static const int cKernelSize = 8;" in ao_shader
 assert "float2(-4.0f * TESR_ReciprocalResolution.x" in ao_shader
 assert "float2( 4.0f * TESR_ReciprocalResolution.x" in ao_shader
 assert "CompileEffects : 2" in main_defaults
+# Adaptive grass distance is opt-in and mirrored across the Rust/C++ FFI.
+main_config = Path("Configurator/src/main_config.rs").read_text(encoding="utf-8")
+ffi_config = Path("TESReloaded/Core/SettingStructure.h").read_text(encoding="utf-8")
+grass_hook = Path("TESReloaded/Core/Hooks/Oblivion/Grass.cpp").read_text(encoding="utf-8")
+assert "AdaptiveGrassDistance : false" in main_config
+assert "GrassTargetFrameRate : 60" in main_config
+assert "GrassMinimumDistanceScale : 0.65" in main_config
+for field in ("bool AdaptiveGrassDistance;", "uint8_t GrassTargetFrameRate;",
+              "float GrassMinimumDistanceScale;"):
+    assert field in ffi_config, f"Missing C++ FFI field: {field}"
+for token in ("UpdateAdaptiveGrassDistance", "ElapsedTime * 1000.0",
+              "TargetFrameTimeMs * 1.10f", "TargetFrameTimeMs * 1.03f",
+              "DistanceScale -= 0.15f * DeltaSeconds",
+              "DistanceScale += 0.05f * DeltaSeconds",
+              "EffectiveStartFadingDistance", "EffectiveEndDistance"):
+    assert token in grass_hook, f"Missing adaptive grass behavior: {token}"
+assert "SettingsMain->AdaptiveGrassDistance" in grass_hook
+# Publishing must be tag-driven; a push to master must not overwrite an old release.
+release_workflow = Path(".github/workflows/build-release.yml").read_text(encoding="utf-8")
+assert "if: startsWith(github.ref, 'refs/tags/v')" in release_workflow
+assert "github.ref == 'refs/heads/master'" not in release_workflow
+assert "Oblivion-Reloaded-Lite-$env:PACKAGE_VERSION.zip" in release_workflow
+assert "tag_name: ${{ github.ref_name }}" in release_workflow
+
 print("Oblivion Reloaded Lite profile checks passed.")

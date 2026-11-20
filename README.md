@@ -34,6 +34,10 @@ The shipped configuration is deliberately conservative:
 
 These are configuration choices, not measured performance results. Main options are stored in `Data/OBSE/Plugins/OblivionReloaded.ini`; AO quality values are stored in `Data/Shaders/OblivionReloaded/Effects/Effects.ini`.
 
+### Adaptive grass distance (opt-in)
+
+The current development branch includes an opt-in controller that gradually scales grass fade/end distances when smoothed frame times remain above a configurable target. It is disabled by default until visual behavior and performance are validated on physical Steam Deck hardware. See [ORSE feature audit and development decisions](docs/ORSE_FEATURE_AUDIT.md).
+
 ### Lightweight ambient occlusion
 
 AO is enabled by default for fresh configurations with a deliberately reduced shader workload:
