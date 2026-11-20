@@ -86,6 +86,12 @@ pub struct MainStruct {
     /// Enable directional light  as sun source instead of the normal sun position (for testing purposes only)
 	TestDirectionLight : bool,
     InstanceFarGeometry : bool,
+    /// Adapt grass draw distance gradually when sustained frame times exceed the configured target.
+    AdaptiveGrassDistance : bool,
+    /// Target frame rate used by adaptive grass distance (30-90 FPS).
+    GrassTargetFrameRate : u8,
+    /// Minimum grass distance multiplier when adaptive mode reduces quality (0.40-0.90).
+    GrassMinimumDistanceScale : f32,
 }
 
 impl Default for MainStruct{
@@ -102,6 +108,9 @@ impl Default for MainStruct{
             FarPlaneDistance : 283840.0,
 			TestDirectionLight : false,
             InstanceFarGeometry : false,
+			AdaptiveGrassDistance : false,
+            GrassTargetFrameRate : 60,
+            GrassMinimumDistanceScale : 0.65,
         }
     }
 }
