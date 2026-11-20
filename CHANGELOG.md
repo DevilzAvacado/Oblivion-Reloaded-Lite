@@ -12,6 +12,17 @@
 **Validation limitation:** A Windows x86 CI build and static checks can validate compilation and configuration consistency, but they cannot validate grass transitions, actual frame-time gains, stability or power consumption on Steam Deck hardware.
 
 
+## 0.2.0 — Lightweight ambient occlusion
+
+- Enabled lightweight depth-aware ambient occlusion for fresh configurations.
+- Reduced AO sampling to four depth samples.
+- Reduced the separable blur to eight depth-aware taps per direction.
+- Tuned AO radius and strength for restrained interior and exterior contact shading.
+- Added shader staging so changed HLSL recompiles under the changed-or-missing shader compilation mode.
+- Added profile checks for AO defaults and shader budget.
+
+**Validation caveat:** The Windows x86 build and static profile checks do not establish in-game rendering correctness or Steam Deck performance, frame pacing, power draw or battery life.
+
 ## 0.1.0 — Steam Deck Lite source candidate
 
 - Added conservative Steam Deck-oriented configuration defaults.
