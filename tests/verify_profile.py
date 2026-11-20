@@ -29,7 +29,7 @@ assert value("./_Shaders/ShadowsInteriors/Main/ShadowCubeMapSize") == "1024"
 assert value("./_Shaders/ShadowsInteriors/Main/LightPoints") == "1"
 
 # DXVK RESZ fix: preserve and restore both D3D9 vertex format mechanisms.
-resolve = source.split("void RenderManager::ResolveDepthBuffer()", 1)[1].split("\nvoid ", 1)[0]
+resolve = source.split("void RenderManager::ResolveDepthBuffer()", 1)[1].split("\\nvoid ", 1)[0]
 for token in ("GetFVF", "GetVertexDeclaration", "SetFVF(dCurrFVF)",
               "SetVertexDeclaration(pCurrDecl)", "pCurrDecl->Release()",
               "pCurrVS->Release()", "pCurrPS->Release()"):
@@ -69,11 +69,12 @@ for token in ("UpdateAdaptiveGrassDistance", "ElapsedTime * 1000.0",
               "EffectiveStartFadingDistance", "EffectiveEndDistance"):
     assert token in grass_hook, f"Missing adaptive grass behavior: {token}"
 assert "SettingsMain->AdaptiveGrassDistance" in grass_hook
-# Publishing must be tag-driven; a push to master must not overwrite an old release.
+# Publishing must run on tags or an explicitly named release branch, never on master.
 release_workflow = Path(".github/workflows/build-release.yml").read_text(encoding="utf-8")
-assert "if: startsWith(github.ref, 'refs/tags/v')" in release_workflow
+assert "if: startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/')" in release_workflow
 assert "github.ref == 'refs/heads/master'" not in release_workflow
 assert "Oblivion-Reloaded-Lite-$env:PACKAGE_VERSION.zip" in release_workflow
-assert "tag_name: ${{ github.ref_name }}" in release_workflow
+assert "release_tag=$releaseTag" in release_workflow
+assert "target_commitish: ${{ github.sha }}" in release_workflow
 
 print("Oblivion Reloaded Lite profile checks passed.")
