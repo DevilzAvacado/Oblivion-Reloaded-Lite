@@ -69,5 +69,11 @@ for token in ("UpdateAdaptiveGrassDistance", "ElapsedTime * 1000.0",
               "EffectiveStartFadingDistance", "EffectiveEndDistance"):
     assert token in grass_hook, f"Missing adaptive grass behavior: {token}"
 assert "SettingsMain->AdaptiveGrassDistance" in grass_hook
+# Publishing must be tag-driven; a push to master must not overwrite an old release.
+release_workflow = Path(".github/workflows/build-release.yml").read_text(encoding="utf-8")
+assert "if: startsWith(github.ref, 'refs/tags/v')" in release_workflow
+assert "github.ref == 'refs/heads/master'" not in release_workflow
+assert "Oblivion-Reloaded-Lite-$env:PACKAGE_VERSION.zip" in release_workflow
+assert "tag_name: ${{ github.ref_name }}" in release_workflow
 
 print("Oblivion Reloaded Lite profile checks passed.")
